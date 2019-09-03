@@ -6,25 +6,23 @@ router.post("/login",function(req,res,next){
     req.logout();
     passport.authenticate("Auth",(err,user)=> {
         if (err != null || user === false) {
-            res.json({success: false, error: "invalid username/password"});
+            res.send(401,"Inavalid username / Password");
             return;
         }
         req.logIn(user, function (err) {
             if (err) {
-                res.json({success: false, error: "login error"});
+                res.send(401,"Login failed");
             } else {
                 // console.log(req.user);
-                res.json({success: true,message: "Succesful login"});
+                res.send(200,"Succesful login");
             }
         });
     })(req, res,next);
-
-    
 });
 
 router.get("/logout", function (req, res) {
     req.logout();
-    res.json({success: true});
+    res.send(200);
 });
 
 module.exports = router;

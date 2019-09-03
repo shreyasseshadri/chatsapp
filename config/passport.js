@@ -12,11 +12,17 @@ const validatePassword = function(password,hash,salt) {
 
 module.exports = function(passport){
     passport.serializeUser(function (user, done) {
-        done(null, JSON.stringify({type: user.type, _id: user._id, username: user.username}));
+        done(null, user.id);
     });
 
     passport.deserializeUser(function (id, done) {
-        done(null, JSON.parse(id));
+        Users.findById(id,(err,usr)=> {
+        if(err)
+            done(err);
+        if(!usr)
+            done(null,false)
+        done(null,usr);
+        });
     });
     
     passport.use("Auth",
