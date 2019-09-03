@@ -9,8 +9,6 @@ const hashPassword = function(password) {
 };
 
 router.post('/', function(req, res) {
-  // res.send('respond with a resource');.
-  // console.log(req.body);
   const { body } = req;
   if(!body.username || !body.password || !body.name || !body.phone)
   {

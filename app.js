@@ -64,7 +64,7 @@ app.use(passport.session());
 app.use('/', indexRouter);
 app.use('/register', registerRouter);
 app.use('/auth',authRouter);
-app.use('/info',infoRouter);
+app.use('/self',infoRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
