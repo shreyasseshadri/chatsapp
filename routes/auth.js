@@ -3,26 +3,26 @@ var router = express.Router();
 const passport = require("passport");
 
 router.post("/login",function(req,res,next){
-    console.log(req.body);
+    // console.log(req.body);
     if(!req.body.username || !req.body.password)
     {
-        res.send(400,"Invalid request");
+        res.status(400).send("Invalid request");
         return;
     }
     req.logout();
     passport.authenticate("Auth",(err,user)=> {
         if (err != null || user === false) {
-            res.send(401,"Inavalid username / Password");
+            res.status(401).send("Inavalid username / Password");
             return;
         }
         req.logIn(user, function (err) {
             if (err) {
-                console.log("ERRRRRRRRRRRRRRRRRRRR",err);
-                res.send(401,"Login failed");
+                console.log("Auth error ",err);
+                res.status(401).send("Login failed");
                 return;
             } else {
-                console.log(req.user);
-                res.send(200,"Succesful login");
+                console.log("Sucessful login User" + req.user.username);
+                res.status(200).send("Succesful login");
                 return;
             }
         });

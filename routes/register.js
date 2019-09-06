@@ -21,7 +21,8 @@ router.post('/', function(req, res) {
   let new_user = User(body);
   new_user.save((err)=> {
     if (err) {
-      res.send(400," Ah shit here we go agin");
+      console.log(err);
+      res.status(400).send(" Ah shit here we go agin");
       return;
     }
     Object.assign(body,{password:undefined,hash:undefined,salt:undefined});

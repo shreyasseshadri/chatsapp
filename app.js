@@ -78,9 +78,9 @@ var indexRouter = require('./routes/index');
 var registerRouter = require('./routes/register');
 var authRouter = require("./routes/auth");
 var infoRouter = require("./routes/info");
-var messageRouter = require("./routes/sendMessage");
+var messageRouter = require("./routes/message");
 
-app.use('/sendMessage',messageRouter);
+app.use('/message',messageRouter);
 app.use('/', indexRouter);
 app.use('/register', registerRouter);
 app.use('/auth',authRouter);
@@ -88,7 +88,7 @@ app.use('/self',infoRouter);
 
 // catch 404 and forward to error handler
 app.use(function(err,req, res, next) {
-  console.log(err);
+  if(err)console.log(err);
   next(createError(404));
 });
 

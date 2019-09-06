@@ -6,7 +6,7 @@ const Users = require('../models/user');
 
 const validatePassword = function(password,hash,salt) {
     const genHash = crypto.pbkdf2Sync(password, salt, 10000, 512, 'sha512').toString('hex');
-    console.log(hash === genHash); 
+    // console.log(hash === genHash); 
     return hash === genHash;
 };
 
@@ -16,9 +16,9 @@ module.exports = function(passport){
     });
 
     passport.deserializeUser(function (id, done) {
-        console.log('Deserialize');
+        // console.log('Deserialize');
         Users.findById(id,(err,usr)=> {
-        console.log(usr);
+        // console.log(usr);
         if(err)
         {console.log("error",err);done(err);}
             // done(err);
