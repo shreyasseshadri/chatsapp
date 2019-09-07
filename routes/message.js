@@ -1,48 +1,91 @@
 var express = require('express');
 var router = express.Router();
 const Message = require('../models/message');
+const Users = require('../models/user');
 
-var clients = {}
+const users = [];
+
+Users.find({},{username:1},(err,res)=> {
+    res.map((usr) => {users.push(usr.username);});
+});
+
+var clients = {};
+var undeliveredMessages = {};
 
 const TEXT_COMMUNICATION = "text";
+const UNDELIVELIRED = "undelivered";
+
+async function getMessagesFromTime(stamps){
+    let message = Message.find({timestamp:stamps},{_id:0,from:1,to:1,text:1})
+    return message;
+}
+
+async function getUndelivered(timestamps){
+    let undelivered = [];
+    timestamps.map((stamp) => {
+        getMessageFromTime(stamp).then((msg)=> {
+            console.log(msg);
+            undelivered.push(msg);
+        });
+    });
+    return undelivered;
+}
 
 router.ws("/",function(ws,req){
 
     console.log('Connection eshtablished');
-    if(!req.isAuthenticated())
-    {
+    if(!req.isAuthenticated()){
         ws.terminate();
         return;
+    
     }
     ws.user = req.user;
-    ws.id = 123;
-    // console.log(ws.user);
-    ws.send('hello from server');
     clients[req.user.username] = ws;
+
+    if(undeliveredMessages[ws.user.username]){
+        getMessagesFromTime(undeliveredMessages[ws.user.username]).then((msgs) => {
+
+            if(clients[ws.user.username]){
+                clients[ws.user.username].send(JSON.stringify(msgs));
+                delete undeliveredMessages[ws.user.username];
+                console.log("After Delivered "+ JSON.stringify(undeliveredMessages));
+            }
+        });
+    }
+    ws.send('hello from server');
     console.log('Clients: '+Object.keys(clients));
     ws.on("message",(msg)=> {
         msg = JSON.parse(msg);
-        if(!msg.to || !msg.from || !msg.timestamp ||!msg.type)
+        if(!msg.to || !msg.from || !msg.timestamp ||!msg.type || 
+            !users.includes(msg.from) || !users.includes(msg.to))
         {
             ws.send("Invalid body");
         }
         else
         {
-            // console.log(msg);
             switch(msg.type)
             {
                 case TEXT_COMMUNICATION:
                 {   
-                    if(clients[msg.to])
-                    {
+                    if(!msg.text){
+                        ws.send('Invalid body');
+                        break;
+                    }
+                    if(clients[msg.to]){
                         clients[msg.to].send(JSON.stringify(msg));
                     }
-                    else
-                    {
-                        delete clients[msg.to];
+                    else{
+                        //TODO: Use id instead of timstamp
+                        if(undeliveredMessages[msg.to])
+                            undeliveredMessages[msg.to].push(msg.timestamp);
+                        else{
+                            undeliveredMessages[msg.to] = [];
+                            undeliveredMessages[msg.to].push(msg.timestamp);
+                        }
+                        console.log(" Undelivered "+JSON.stringify(undeliveredMessages));
                     }
                     delete msg.type
-                    Message(msg).save();   
+                    Message(msg).save();
                 }
                 default :
                 {
@@ -51,12 +94,14 @@ router.ws("/",function(ws,req){
             }
         }
     });
+
     ws.on("close", function (ws, event) {
         if (clients[ws.user.username] != null) {
             delete clients[ws.user.username];
         }
         console.log('After deleting: ',Object.keys(clients));
     }.bind(null, ws));
+
 });
 
 module.exports = router;
