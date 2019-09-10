@@ -66,7 +66,8 @@ router.ws("/",function(ws,req){
             switch(msg.type)
             {
                 case TEXT_COMMUNICATION:
-                {   
+                {    
+                    delete msg.type
                     if(!msg.text){
                         ws.send('Invalid body');
                         break;
@@ -84,7 +85,6 @@ router.ws("/",function(ws,req){
                         }
                         console.log(" Undelivered "+JSON.stringify(undeliveredMessages));
                     }
-                    delete msg.type
                     Message(msg).save();
                 }
                 default :
