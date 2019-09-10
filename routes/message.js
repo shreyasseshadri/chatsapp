@@ -16,7 +16,7 @@ const TEXT_COMMUNICATION = "text";
 const UNDELIVELIRED = "undelivered";
 
 async function getMessagesFromTime(stamps){
-    let message = Message.find({timestamp:stamps},{_id:0,from:1,to:1,text:1})
+    let message = Message.find({timestamp:stamps},{_id:0,from:1,to:1,text:1,timestamp:1})
     return message;
 }
 
