@@ -4,8 +4,8 @@ var password;
 let time = 1;
 var server = 'https://ex-chatsapp.herokuapp.com/'
 var ws_server = 'wss://ex-chatsapp.herokuapp.com/'
-server = 'http://localhost:3000/'
-ws_server = 'ws://localhost:3000/'
+// server = 'http://localhost:3000/'
+// ws_server = 'ws://localhost:3000/'
 function action(type,args){
     username =  document.getElementById('username').value
     password  = document.getElementById('password').value 
