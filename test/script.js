@@ -70,12 +70,3 @@ function action(type,args){
         }
     }
 }
-
-// function close()
-// {   
-//     console.log("here");
-//     if(ws){
-//         console.log("closing");
-//         ws.close();
-//     }
-// }
