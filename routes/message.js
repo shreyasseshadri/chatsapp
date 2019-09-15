@@ -2,6 +2,8 @@ var express = require('express');
 var router = express.Router();
 const Message = require('../models/message');
 const Users = require('../models/user');
+var path  = require('path');
+var test = path.resolve(__dirname,'../test');
 
 const users = [];
 
@@ -18,17 +20,6 @@ const UNDELIVELIRED = "undelivered";
 async function getMessagesFromTime(stamps){
     let message = Message.find({timestamp:stamps},{_id:0,from:1,to:1,text:1,timestamp:1})
     return message;
-}
-
-async function getUndelivered(timestamps){
-    let undelivered = [];
-    timestamps.map((stamp) => {
-        getMessageFromTime(stamp).then((msg)=> {
-            console.log(msg);
-            undelivered.push(msg);
-        });
-    });
-    return undelivered;
 }
 
 router.ws("/",function(ws,req){
@@ -56,6 +47,7 @@ router.ws("/",function(ws,req){
     console.log('Clients: '+Object.keys(clients));
     ws.on("message",(msg)=> {
         msg = JSON.parse(msg);
+        console.log(msg);
         if(!msg.to || !msg.from || !msg.timestamp ||!msg.type || 
             !users.includes(msg.from) || !users.includes(msg.to))
         {

@@ -6,11 +6,15 @@ var test = path.resolve(__dirname,'../test');
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  res.sendFile(test+'/index.html');
+  res.sendFile(test+'/login.html');
 });
 
-router.get('/script.js', function(req, res, next) {
-  res.sendFile(test+'/script.js');
+router.get('/message',function(req,res,next){
+  res.sendFile(test+'/message.html');
+});
+
+router.get('/message.js', function(req, res, next) {
+  res.sendFile(test+'/message.js');
 });
 
 module.exports = router;

@@ -22,11 +22,11 @@ router.post("/login",function(req,res,next){
                 return;
             } else {
                 console.log("Sucessful login User" + req.user.username);
-                res.status(200).send("Succesful login");
+                res.redirect('/message');
                 return;
             }
         });
-    })(req, res,next);
+    },)(req, res,next);
 });
 
 router.get("/logout", function (req, res) {
