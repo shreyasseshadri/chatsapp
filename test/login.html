@@ -10,7 +10,7 @@
             function login(){
                 username =  document.getElementById('username').value
                 password  = document.getElementById('password').value 
-                fetch('http://localhost:3000/auth/login',{
+                fetch(server+'auth/login',{
                     method: 'POST',
                     redirect: 'follow',
                     headers: {
