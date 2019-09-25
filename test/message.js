@@ -1,7 +1,7 @@
 var ws_server = 'wss://ex-chatsapp.herokuapp.com/'
 var server = 'https://ex-chatsapp.herokuapp.com/'
-server = 'http://localhost:3000/'
-ws_server = 'ws://localhost:3000/'
+// server = 'http://localhost:3000/'
+// ws_server = 'ws://localhost:3000/'
 var username;
 
 
