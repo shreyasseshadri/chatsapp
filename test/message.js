@@ -1,10 +1,10 @@
-var ws_server = 'wss://ex-chatsapp.herokuapp.com/'
-var server = 'https://ex-chatsapp.herokuapp.com/'
-// server = 'http://localhost:3000/'
-// ws_server = 'ws://localhost:3000/'
+var server = "http://"+location.host+"/";
+var ws_server;
+if(location.hostname === "localhost")
+    ws_server = "ws://"+location.host+"/";
+else ws_server = "wss://"+location.host+"/";
+
 var username;
-
-
 fetch(server+'self',{
     method: 'GET',
     headers: {
@@ -47,4 +47,19 @@ function message(){
         console.log("ws not available");
         buffer.push(resp);
     }
+}
+
+function history(){
+    let otherUser  = document.getElementById('history').value;
+    fetch(server+'message/history'+'?otherUser='+otherUser,{
+        method: 'GET',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        credentials: 'include'
+    }).then((resp) => {return resp.json()})
+    .then((json) => {
+        console.log(json);
+    })
 }

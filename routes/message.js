@@ -17,9 +17,12 @@ var undeliveredMessages = {};
 const TEXT_COMMUNICATION = "text";
 const UNDELIVELIRED = "undelivered";
 
-async function getMessagesFromTime(stamps){
-    let message = Message.find({timestamp:stamps},{_id:0,from:1,to:1,text:1,timestamp:1})
-    return message;
+async function getHistory(from,to){
+    return Message.find({'to':to,'from':from},{_id:0,from:1,to:1,text:1,timestamp:1});
+}
+
+async function getMessagesFromId(ids){
+    return Message.find({'_id':ids},{_id:0,from:1,to:1,text:1,timestamp:1});
 }
 
 router.ws("/",function(ws,req){
@@ -33,8 +36,9 @@ router.ws("/",function(ws,req){
     ws.user = req.user;
     clients[req.user.username] = ws;
 
+
     if(undeliveredMessages[ws.user.username]){
-        getMessagesFromTime(undeliveredMessages[ws.user.username]).then((msgs) => {
+        getMessagesFromId(undeliveredMessages[ws.user.username]).then((msgs) => {
 
             if(clients[ws.user.username]){
                 clients[ws.user.username].send(JSON.stringify(msgs));
@@ -59,25 +63,28 @@ router.ws("/",function(ws,req){
             {
                 case TEXT_COMMUNICATION:
                 {    
+                    let msg_id;
                     delete msg.type
                     if(!msg.text){
                         ws.send('Invalid body');
                         break;
                     }
-                    if(clients[msg.to]){
+                    if(clients[msg.to])
+                    {
                         clients[msg.to].send(JSON.stringify(msg));
                     }
-                    else{
-                        //TODO: Use id instead of timstamp
-                        if(undeliveredMessages[msg.to])
-                            undeliveredMessages[msg.to].push(msg.timestamp);
-                        else{
-                            undeliveredMessages[msg.to] = [];
-                            undeliveredMessages[msg.to].push(msg.timestamp);
+                    Message(msg).save((err,msg)=> {
+                        if(!clients[msg.to]){
+                            if(undeliveredMessages[msg.to])
+                                undeliveredMessages[msg.to].push(msg._id);
+                            else{
+                                undeliveredMessages[msg.to] = [];
+                                undeliveredMessages[msg.to].push(msg._id);
+                            }
+                            console.log(" Undelivered "+JSON.stringify(undeliveredMessages));
                         }
-                        console.log(" Undelivered "+JSON.stringify(undeliveredMessages));
-                    }
-                    Message(msg).save();
+    
+                    });
                 }
                 default :
                 {
@@ -94,6 +101,20 @@ router.ws("/",function(ws,req){
         console.log('After deleting: ',Object.keys(clients));
     }.bind(null, ws));
 
+});
+
+router.get("/history",function(req,res,next){
+    if(!req.isAuthenticated()){
+        res.status(401).send("You shall not pass");
+        return;
+    }
+    let otherUser = req.query.otherUser;
+    let me = req.user.username;
+
+    getHistory([otherUser,me],[otherUser,me]).then((msgs)=> {
+        msgs.sort((a,b) => {return a.timestamp - b.timestamp});
+        res.send(JSON.stringify(msgs));
+    });
 });
 
 module.exports = router;

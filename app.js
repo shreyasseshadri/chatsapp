@@ -32,7 +32,7 @@ const connectWithRetry = () => {
 }
 
 // connectWithRetry()
-
+console.log(process.env.MONGO_LOC)
 mongoose.connect(process.env.MONGO_LOC, {useNewUrlParser: true});
 const db = mongoose.connection;
 db.on("error", console.error.bind(console, "MongoDB connection error:"));
