@@ -1,5 +1,5 @@
 # Chatsapp
-
+[![Build Status](https://travis-ci.org/shreyasseshadri/chatsapp.svg?branch=master)](https://travis-ci.org/shreyasseshadri/chatsapp)
 TODO List:
 
 - [x] Login and Logout `/auth`
