@@ -29,15 +29,15 @@ describe('Initial tests',  () => {
     //    expect(res).to.have.status(401);
     // })
 
-    it('Direct message access after logging', async () => {
-        const login_res = await agent.post('/auth/login').send({username:'test1',password:'pass1'});
-        expect(login_res).to.have.status(200);
+    // it('Direct message access after logging', async () => {
+    //     const login_res = await agent.post('/auth/login').send({username:'test1',password:'pass1'});
+    //     expect(login_res).to.have.status(200);
 
-        //Go to message now
+    //     //Go to message now
 
-        const message_res = await agent.get('/message');
-        expect(message_res).to.have.status(200);
+    //     const message_res = await agent.get('/message');
+    //     expect(message_res).to.have.status(200);
       
-    })
+    // })
 
 });
