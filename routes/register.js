@@ -15,6 +15,9 @@ router.post('/', function(req, res) {
     res.send(400,"Invalid Body");
     return;
   }
+  if(body.phone.toString.length()!=10){
+    res.send(400,"Phone number not valid");
+  }
   let enc =  hashPassword(body.password);
   body.password = enc.hash;
   body.salt = enc.salt;
