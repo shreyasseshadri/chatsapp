@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 const User = require("../models/user");
 const crypto = require('crypto');
+var validator = require('validator');
 
 const hashPassword = function(password) {
   var salt = crypto.randomBytes(16).toString('hex');
