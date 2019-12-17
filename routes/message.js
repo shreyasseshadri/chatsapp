@@ -7,8 +7,9 @@ var test = path.resolve(__dirname,'../test');
 
 const users = [];
 
-Users.find({},{username:1},(err,res)=> {
-    res.map((usr) => {users.push(usr.username);});
+Users.find({},{phone:1},(err,res)=> {
+    res.map((usr) => {users.push(usr.phone);});
+    console.log("test users: "+ users);
 });
 
 var clients = {};
@@ -25,6 +26,9 @@ async function getMessagesFromId(ids){
     return Message.find({'_id':ids},{_id:0,from:1,to:1,text:1,timestamp:1});
 }
 
+
+
+
 router.ws("/",function(ws,req){
 
     console.log('Connection eshtablished');
@@ -34,15 +38,19 @@ router.ws("/",function(ws,req){
     
     }
     ws.user = req.user;
-    clients[req.user.username] = ws;
+    //console.log(req.user.phone)  //debug 
+    clients[req.user.phone] = ws; 
 
 
-    if(undeliveredMessages[ws.user.username]){
-        getMessagesFromId(undeliveredMessages[ws.user.username]).then((msgs) => {
 
-            if(clients[ws.user.username]){
-                clients[ws.user.username].send(JSON.stringify(msgs));
-                delete undeliveredMessages[ws.user.username];
+
+
+    if(undeliveredMessages[ws.user.phone]){
+        getMessagesFromId(undeliveredMessages[ws.user.phone]).then((msgs) => {
+
+            if(clients[ws.user.phone]){
+                clients[ws.user.phone].send(JSON.stringify(msgs));
+                delete undeliveredMessages[ws.user.phone];
                 console.log("After Delivered "+ JSON.stringify(undeliveredMessages));
             }
         });
@@ -51,17 +59,18 @@ router.ws("/",function(ws,req){
     console.log('Clients: '+Object.keys(clients));
     ws.on("message",(msg)=> {
         msg = JSON.parse(msg);
-        console.log(msg);
+        //console.log(msg);
         if(!msg.to || !msg.from || !msg.timestamp ||!msg.type || 
             !users.includes(msg.from) || !users.includes(msg.to))
-        {
+        {   // checks for valid message
             ws.send("Invalid body");
+            console.log('Invalid body')
         }
         else
         {
             switch(msg.type)
             {
-                case TEXT_COMMUNICATION:
+                case TEXT_COMMUNICATION:  //case where communication is of text type
                 {    
                     let msg_id;
                     delete msg.type
@@ -74,8 +83,8 @@ router.ws("/",function(ws,req){
                         clients[msg.to].send(JSON.stringify(msg));
                     }
                     Message(msg).save((err,msg)=> {
-                        if(!clients[msg.to]){
-                            if(undeliveredMessages[msg.to])
+                        if(!clients[msg.to]){ // checks if reciepient is logged in
+                            if(undeliveredMessages[msg.to])  // saves the message JSON in undelivered object if reciepient isnt online
                                 undeliveredMessages[msg.to].push(msg._id);
                             else{
                                 undeliveredMessages[msg.to] = [];
@@ -98,7 +107,7 @@ router.ws("/",function(ws,req){
         if (clients[ws.user.username] != null) {
             delete clients[ws.user.username];
         }
-        console.log('After deleting: ',Object.keys(clients));
+        console.log('Remaining clients after deleting: ',Object.keys(clients));
     }.bind(null, ws));
 
 });
@@ -118,3 +127,4 @@ router.get("/history",function(req,res,next){
 });
 
 module.exports = router;
+
