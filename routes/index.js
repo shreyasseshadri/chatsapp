@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var path  = require('path');
-var test = path.resolve(__dirname,'../test');
+var test = path.resolve(__dirname,'../test_interface');
 //console.log(dirpath);
 
 /* GET home page. */
