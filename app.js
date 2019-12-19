@@ -8,6 +8,8 @@ const passport = require("passport");
 const session = require("express-session");
 // const expressValidator = require("express-validator");
 var cors = require('cors')
+const dotenv = require("dotenv");
+dotenv.config();
 
 const options = {
   autoIndex: false, // Don't build indexes

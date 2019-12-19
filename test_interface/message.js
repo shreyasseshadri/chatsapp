@@ -15,7 +15,7 @@ fetch(server+'self',{
 }).then(resp => {return resp.json()})
 .then(json => {
     document.getElementById('placeholder').innerText += ' '+json.username;
-    username = json.username;
+    username = json.phone;
 });
 
 const ws = new WebSocket(ws_server+'message');

@@ -7,8 +7,8 @@ var test = path.resolve(__dirname,'../test');
 
 const users = [];
 
-Users.find({},{username:1},(err,res)=> {
-    res.map((usr) => {users.push(usr.username);});
+Users.find({},{phone:1},(err,res)=> {
+    res.map((usr) => {users.push(usr.phone);});
 });
 
 var clients = {};
@@ -34,15 +34,15 @@ router.ws("/",function(ws,req){
     
     }
     ws.user = req.user;
-    clients[req.user.username] = ws;
+    clients[req.user.phone] = ws;
 
 
-    if(undeliveredMessages[ws.user.username]){
-        getMessagesFromId(undeliveredMessages[ws.user.username]).then((msgs) => {
+    if(undeliveredMessages[ws.user.phone]){
+        getMessagesFromId(undeliveredMessages[ws.user.phone]).then((msgs) => {
 
-            if(clients[ws.user.username]){
-                clients[ws.user.username].send(JSON.stringify(msgs));
-                delete undeliveredMessages[ws.user.username];
+            if(clients[ws.user.phone]){
+                clients[ws.user.phone].send(JSON.stringify(msgs));
+                delete undeliveredMessages[ws.user.phone];
                 console.log("After Delivered "+ JSON.stringify(undeliveredMessages));
             }
         });
