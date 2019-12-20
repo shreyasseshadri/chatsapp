@@ -26,13 +26,13 @@ async function getMessagesFromId(ids){
 }
 
 router.ws("/",function(ws,req){
-
-    console.log('Connection eshtablished');
     if(!req.isAuthenticated()){
+        console.log('Unauthorized connection')
         ws.terminate();
         return;
     
     }
+    console.log('Secure Connection eshtablished');
     ws.user = req.user;
     clients[req.user.username] = ws;
 
@@ -50,8 +50,8 @@ router.ws("/",function(ws,req){
     ws.send('hello from server');
     console.log('Clients: '+Object.keys(clients));
     ws.on("message",(msg)=> {
+        console.log('Message from client ',msg)
         msg = JSON.parse(msg);
-        console.log(msg);
         if(!msg.to || !msg.from || !msg.timestamp ||!msg.type || 
             !users.includes(msg.from) || !users.includes(msg.to))
         {
@@ -85,6 +85,7 @@ router.ws("/",function(ws,req){
                         }
     
                     });
+                    break
                 }
                 default :
                 {
