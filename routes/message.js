@@ -95,8 +95,8 @@ router.ws("/",function(ws,req){
     });
 
     ws.on("close", function (ws, event) {
-        if (clients[ws.user.username] != null) {
-            delete clients[ws.user.username];
+        if (clients[ws.user.phone] != null) {
+            delete clients[ws.user.phone];
         }
         console.log('After deleting: ',Object.keys(clients));
     }.bind(null, ws));
