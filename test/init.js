@@ -23,7 +23,7 @@ describe('Initial tests',  () => {
     before(async () => {
         server = require('../app').httpServer;
         app = require('../bin/www')
-        server.listen(3000)
+        // server.listen(3000)
         agent = chai.request.agent(server)
         const resp = await agent.post('/register').send(dummy_user);
         // console.log(resp)
