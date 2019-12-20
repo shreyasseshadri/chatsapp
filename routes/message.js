@@ -3,7 +3,7 @@ var router = express.Router();
 const Message = require('../models/message');
 const Users = require('../models/user');
 var path  = require('path');
-var test = path.resolve(__dirname,'../test');
+
 
 const users = [];
 
@@ -15,7 +15,7 @@ var clients = {};
 var undeliveredMessages = {};
 
 const TEXT_COMMUNICATION = "text";
-const UNDELIVELIRED = "undelivered";
+
 
 async function getHistory(from,to){
     return Message.find({'to':to,'from':from},{_id:0,from:1,to:1,text:1,timestamp:1});
@@ -64,7 +64,7 @@ router.ws("/",function(ws,req){
                 case TEXT_COMMUNICATION:
                 {    
                     let msg_id;
-                    delete msg.type
+                    
                     if(!msg.text){
                         ws.send('Invalid body');
                         break;
