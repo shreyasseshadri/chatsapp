@@ -83,7 +83,7 @@ const dummy_user2 = {
 describe('Message Tests',  () => {
     before(async () => {
         server = require('../app').httpServer;
-        // server.listen(3000)
+        server.listen(3000)
         agent1 = chai.request.agent(server);
         agent2 = chai.request.agent(server);
 
