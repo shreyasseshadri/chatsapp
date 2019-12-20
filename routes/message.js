@@ -4,12 +4,11 @@ const Message = require('../models/message');
 const Users = require('../models/user');
 var path  = require('path');
 
-
-const users = [];
-
-Users.find({},{phone:1},(err,res)=> {
-    res.map((usr) => {users.push(usr.phone);});
-});
+async function userExists(userPhone){
+    const count= await Users.count({phone:userPhone})
+    if(count>0)return true
+    else return false
+}
 
 var clients = {};
 var undeliveredMessages = {};
@@ -49,11 +48,13 @@ router.ws("/",function(ws,req){
     }
     ws.send('hello from server');
     console.log('Clients: '+Object.keys(clients));
-    ws.on("message",(msg)=> {
+    ws.on("message",async (msg)=> {
         console.log('Message from client ',msg)
         msg = JSON.parse(msg);
+        const toExists = await userExists(msg.to)
+        const fromExists  = await userExists(msg.from)
         if(!msg.to || !msg.from || !msg.timestamp ||!msg.type || 
-            !users.includes(msg.from) || !users.includes(msg.to))
+            !toExists || !fromExists)
         {
             ws.send("Invalid body");
         }

@@ -20,6 +20,12 @@ router.get('/message',function(req,res,next){
 });
 
 router.get('/message.js', function(req, res, next) {
+  if(!req.isAuthenticated()){
+    res.redirect('/');
+    //res.status(401).send("You shall not pass");
+    return;
+}
+
   res.sendFile(test+'/message.js');
 });
 

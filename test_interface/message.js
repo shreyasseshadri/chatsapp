@@ -14,8 +14,8 @@ fetch(server+'self',{
     credentials: 'include'
 }).then(resp => {return resp.json()})
 .then(json => {
-    document.getElementById('placeholder').innerText += ' '+json.phone;
-    username = json.phone;
+    document.getElementById('placeholder').innerText += ' '+json.username;
+    phone = json.phone;
 });
 
 const ws = new WebSocket(ws_server+'message');
@@ -41,7 +41,7 @@ function message(){
             ws.send(msg);
         })
         buffer.length = 0;
-        ws.send(resp);
+        console.log(resp)
     }
     else{
         console.log("ws not available");
