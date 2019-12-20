@@ -9,7 +9,6 @@ const session = require("express-session");
 // const expressValidator = require("express-validator");
 var cors = require('cors')
 
-
 const options = {
   autoIndex: false, // Don't build indexes
   reconnectTries: 30, // Retry up to 30 times
