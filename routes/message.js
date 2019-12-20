@@ -3,19 +3,19 @@ var router = express.Router();
 const Message = require('../models/message');
 const Users = require('../models/user');
 var path  = require('path');
-var test = path.resolve(__dirname,'../test');
+
 
 const users = [];
 
-Users.find({},{username:1},(err,res)=> {
-    res.map((usr) => {users.push(usr.username);});
+Users.find({},{phone:1},(err,res)=> {
+    res.map((usr) => {users.push(usr.phone);});
 });
 
 var clients = {};
 var undeliveredMessages = {};
 
 const TEXT_COMMUNICATION = "text";
-const UNDELIVELIRED = "undelivered";
+
 
 async function getHistory(from,to){
     return Message.find({'to':to,'from':from},{_id:0,from:1,to:1,text:1,timestamp:1});
@@ -34,15 +34,15 @@ router.ws("/",function(ws,req){
     }
     console.log('Secure Connection eshtablished');
     ws.user = req.user;
-    clients[req.user.username] = ws;
+    clients[req.user.phone] = ws;
 
 
-    if(undeliveredMessages[ws.user.username]){
-        getMessagesFromId(undeliveredMessages[ws.user.username]).then((msgs) => {
+    if(undeliveredMessages[ws.user.phone]){
+        getMessagesFromId(undeliveredMessages[ws.user.phone]).then((msgs) => {
 
-            if(clients[ws.user.username]){
-                clients[ws.user.username].send(JSON.stringify(msgs));
-                delete undeliveredMessages[ws.user.username];
+            if(clients[ws.user.phone]){
+                clients[ws.user.phone].send(JSON.stringify(msgs));
+                delete undeliveredMessages[ws.user.phone];
                 console.log("After Delivered "+ JSON.stringify(undeliveredMessages));
             }
         });
@@ -64,7 +64,7 @@ router.ws("/",function(ws,req){
                 case TEXT_COMMUNICATION:
                 {    
                     let msg_id;
-                    delete msg.type
+                    
                     if(!msg.text){
                         ws.send('Invalid body');
                         break;
@@ -96,8 +96,8 @@ router.ws("/",function(ws,req){
     });
 
     ws.on("close", function (ws, event) {
-        if (clients[ws.user.username] != null) {
-            delete clients[ws.user.username];
+        if (clients[ws.user.phone] != null) {
+            delete clients[ws.user.phone];
         }
         console.log('After deleting: ',Object.keys(clients));
     }.bind(null, ws));
