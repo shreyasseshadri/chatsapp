@@ -4,7 +4,7 @@ if(location.hostname === "localhost")
     ws_server = "ws://"+location.host+"/";
 else ws_server = "wss://"+location.host+"/";
 
-var username;
+var phone;
 fetch(server+'self',{
     method: 'GET',
     headers: {
@@ -15,7 +15,7 @@ fetch(server+'self',{
 }).then(resp => {return resp.json()})
 .then(json => {
     document.getElementById('placeholder').innerText += ' '+json.username;
-    username = json.username;
+    phone = json.phone;
 });
 
 const ws = new WebSocket(ws_server+'message');
@@ -30,7 +30,7 @@ function message(){
     let msg = document.getElementById('msg').value;
     let toUser = document.getElementById('to').value;
     let resp = JSON.stringify({
-            from: username,
+            from: phone,
             to: toUser,
             type: "text",
             text: msg,
@@ -41,7 +41,7 @@ function message(){
             ws.send(msg);
         })
         buffer.length = 0;
-        ws.send(resp);
+        console.log(resp)
     }
     else{
         console.log("ws not available");

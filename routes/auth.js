@@ -21,7 +21,7 @@ router.post("/login",function(req,res,next){
                 res.status(401).send("Login failed");
                 return;
             } else {
-                console.log("Sucessful login User" + req.user.username);
+                console.log("Sucessful login User: " + req.user.username);
                 res.redirect('/message');
                 return;
             }

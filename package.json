@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "start": "nodemon ./bin/www",
-    "test": "mocha --exit"
+    "test": "mocha --exit --timeout 10000"
   },
   "dependencies": {
     "cookie-parser": "~1.4.4",
@@ -30,6 +30,7 @@
   "devDependencies": {
     "chai": "^4.2.0",
     "chai-http": "^4.3.0",
-    "mocha": "^6.2.2"
+    "mocha": "^6.2.2",
+    "ws": "^7.2.1"
   }
 }
