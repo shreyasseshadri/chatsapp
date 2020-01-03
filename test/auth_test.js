@@ -52,5 +52,7 @@ describe('Auth Test',  () => {
         
         const login_res2 = await agent2.post('/auth/login').send({username:dummy_user2.username,password:dummy_user2.password});
         expect(login_res2).to.have.status(401);
+        expect(login_res2).to.have.property('text');
+        expect(login_res2.text).to.equal("Invalid username / Password");
     });
 });
