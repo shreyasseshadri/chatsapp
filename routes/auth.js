@@ -12,7 +12,7 @@ router.post("/login",function(req,res,next){
     req.logout();
     passport.authenticate("Auth",(err,user)=> {
         if (err != null || user === false) {
-            res.status(401).send("Inavalid username / Password");
+            res.status(401).send("Invalid username / Password");
             return;
         }
         req.logIn(user, function (err) {
