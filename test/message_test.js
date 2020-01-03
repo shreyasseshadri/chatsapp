@@ -87,11 +87,10 @@ describe('Message Tests',  () => {
         agent1 = chai.request.agent(server);
         agent2 = chai.request.agent(server);
 
-
         const resp1 = await agent1.post('/register').send(dummy_user1);
         console.log(resp1.text)
         expect(resp1).to.have.status(200)
-
+        
         const resp2 = await agent2.post('/register').send(dummy_user2);
         console.log(resp2.text)
         expect(resp2).to.have.status(200)  
