@@ -153,26 +153,4 @@ describe('Message Tests',  () => {
 
         expect(msg2.data).to.equal(msg_sent_by_2)
     })
-
-    it('Checking send message to nonexistent user', async() => {
-
-        const login_res1 = await agent1.post('/auth/login').send({username:dummy_user1.username,password:dummy_user1.password});
-        expect(login_res1).to.have.status(200);
-        const session_cookie1 = decodeURIComponent(get_cookie_from_header(login_res1.req._header))
-        const client1 = await await_connect('ws://localhost:3000/message',session_cookie1)
-
-        await sleep(2000)
-
-        const msg_sent_by_1_fail = JSON.stringify({
-            from: dummy_user1.phone,
-            to: dummy_user3.phone,
-            type: "text",
-            text: 'Is anyone there?',
-            timestamp: Date.now()
-        })
-        client1.send(msg_sent_by_1_fail)
-        var msg3 = await await_listen(client1)
-        expect(msg3.data).to.equal('Invalid body');
-    });
-
 });
