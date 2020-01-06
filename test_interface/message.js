@@ -41,7 +41,7 @@ function message(){
             ws.send(msg);
         })
         buffer.length = 0;
-        console.log(resp)
+        ws.send(resp);
     }
     else{
         console.log("ws not available");
