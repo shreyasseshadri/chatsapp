@@ -12,8 +12,10 @@ async function userExists(userPhone){
 
 var clients = {};
 var undeliveredMessages = {};
+var undeliveredReadReceipts = {};
 
 const TEXT_COMMUNICATION = "text";
+const READ_RECEIPT = "read_receipt";
 
 
 async function getHistory(from,to){
@@ -31,7 +33,7 @@ router.ws("/",function(ws,req){
         return;
     
     }
-    console.log('Secure Connection eshtablished');
+    console.log('Secure Connection established');
     ws.user = req.user;
     clients[req.user.phone] = ws;
 
@@ -48,6 +50,13 @@ router.ws("/",function(ws,req){
     }
     ws.send('hello from server');
     console.log('Clients: '+Object.keys(clients));
+
+   
+    //find all unread messages 
+    //send them back a message of read_receipt.
+
+
+
     ws.on("message",async (msg)=> {
         console.log('Message from client ',msg)
         msg = JSON.parse(msg);
@@ -83,6 +92,29 @@ router.ws("/",function(ws,req){
                                 undeliveredMessages[msg.to].push(msg._id);
                             }
                             console.log(" Undelivered "+JSON.stringify(undeliveredMessages));
+                        }
+    
+                    });
+                    break
+                }
+                case READ_RECEIPT:
+                {    
+                    let msg_id;
+                    
+                    if(clients[msg.to]){   
+                        console.log(Date.now());
+                        clients[msg.to].send(JSON.stringify(msg));
+                    }
+                    Message(msg).save((err,msg)=> {
+                        if(!clients[msg.to]){
+                            if(undeliveredReadReceipts[msg.to])
+                                undeliveredReadReceipts[msg.to].push(msg._id);
+                            else{
+                                undeliveredReadReceipts[msg.to] = [];
+                                undeliveredReadReceipts[msg.to].push(msg._id);
+                            }
+                            console.log(" Read receipt sent from "+msg.from+" at time "+msg.timestamp);
+                            console.log(" Undelivered "+JSON.stringify(undeliveredReadReceipts));
                         }
     
                     });
