@@ -101,14 +101,14 @@ router.ws("/",function(ws,req){
                     }
                     Message(msg).save((err,msg)=> {
                         if(!clients[msg.to]){
-                            if(undeliveredReadReceipts[msg.to])
-                                undeliveredReadReceipts[msg.to].push(msg._id);
+                            if(undeliveredMessages[msg.to])
+                                undeliveredMessages[msg.to].push(msg._id);
                             else{
-                                undeliveredReadReceipts[msg.to] = [];
-                                undeliveredReadReceipts[msg.to].push(msg._id);
+                                undeliveredMessages[msg.to] = [];
+                                undeliveredMessages[msg.to].push(msg._id);
                             }
                             console.log(" Read receipt sent from "+msg.from+" at time "+msg.timestamp);
-                            console.log(" Undelivered "+JSON.stringify(undeliveredReadReceipts));
+                            console.log(" Undelivered "+JSON.stringify(undeliveredMessages));
                         }
     
                     });
