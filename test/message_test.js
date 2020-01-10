@@ -66,6 +66,7 @@ function get_cookie_from_header(header) {
 let server;
 let agent1;
 let agent2;
+let agent3;
 
 const dummy_user1 = {
     username: "dummy1",
@@ -102,14 +103,6 @@ describe('Message Tests',  () => {
         const resp2 = await agent2.post('/register').send(dummy_user2);
         console.log(resp2.text)
         expect(resp2).to.have.status(200)
-
-        const resp4 = await agent4.post('/register').send(dummy_user4);
-        console.log(resp4.text)
-        expect(resp4).to.have.status(200)
-
-        const resp5 = await agent5.post('/register').send(dummy_user5);
-        console.log(resp5.text)
-        expect(resp5).to.have.status(200)
         
     })
 
