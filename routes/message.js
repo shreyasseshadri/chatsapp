@@ -51,11 +51,6 @@ router.ws("/",function(ws,req){
     ws.send('hello from server');
     console.log('Clients: '+Object.keys(clients));
 
-   
-    //find all unread messages 
-    //send them back a message of read_receipt.
-
-
 
     ws.on("message",async (msg)=> {
         console.log('Message from client ',msg)
