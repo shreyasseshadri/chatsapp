@@ -85,18 +85,6 @@ const dummy_user3 = {
     password: "DummyUser@3",
     phone:"5730586833"
 }
-const dummy_user4 = {
-    username: "dummy4",
-    name: "dummy",
-    password: "DummyUser@4",
-    phone:"5730516833"
-}
-const dummy_user5 = {
-    username: "dummy5",
-    name: "dummy",
-    password: "DummyUser@5",
-    phone:"5750586833"
-}
 
 describe('Message Tests',  () => {
     before(async () => {
@@ -105,9 +93,6 @@ describe('Message Tests',  () => {
         agent1 = chai.request.agent(server);
         agent2 = chai.request.agent(server);
         agent3 = chai.request.agent(server);
-
-        agent4 = chai.request.agent(server);
-        agent5 = chai.request.agent(server);
 
         
         const resp1 = await agent1.post('/register').send(dummy_user1);
@@ -132,14 +117,10 @@ describe('Message Tests',  () => {
         agent1.close();
         agent2.close();
         agent3.close();
-        agent4.close();
-        agent5.close();
 
         await User.find({username:dummy_user1.username}).remove()
         await User.find({username:dummy_user2.username}).remove()
         await User.find({username:dummy_user3.username}).remove()
-        await User.find({username:dummy_user4.username}).remove()
-        await User.find({username:dummy_user5.username}).remove()
     })
 
     it('Simple Message exchange', async () => {
