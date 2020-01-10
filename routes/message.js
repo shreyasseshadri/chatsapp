@@ -12,7 +12,6 @@ async function userExists(userPhone){
 
 var clients = {};
 var undeliveredMessages = {};
-var undeliveredReadReceipts = {};
 
 const TEXT_COMMUNICATION = "text";
 const READ_RECEIPT = "read_receipt";
